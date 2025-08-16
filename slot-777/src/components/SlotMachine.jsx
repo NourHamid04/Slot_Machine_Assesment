@@ -152,7 +152,7 @@ return (
                           shadow-[0_10px_30px_rgba(0,0,0,0.6),inset_0_0_40px_rgba(168,85,247,0.45)] 
                           p-4 text-center">
             <div className="text-[10px] uppercase tracking-[0.35em] text-yellow-300">Cyber Slots</div>
-            <div className="text-3xl md:text-4xl font-extrabold">
+            <div className="text-3xl md:text-2xl font-extrabold">
               <span className="text-white drop-shadow-[0_0_18px_rgba(255,255,255,0.3)]">NEON</span>
               <span className="mx-2 text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-yellow-400 to-purple-400 drop-shadow-[0_0_22px_rgba(251,191,36,0.9)]">777</span>
             </div>
@@ -199,40 +199,53 @@ return (
           </div>
         </div>
 
-        {/* SLOT WINDOW */}
-        <div className="relative mx-auto max-w-3xl rounded-[1.5rem] 
-                        bg-gradient-to-b from-[#1f2937] to-black 
-                        border-2 border-slate-600/70 
-                        shadow-[0_20px_60px_rgba(0,0,0,0.6),inset_0_0_60px_rgba(30,41,59,0.9)] 
-                        p-5 md:p-6 mb-2">
-          {/* bezel inner border */}
-          <div className="absolute inset-1 rounded-[1.35rem] border border-slate-500/50 pointer-events-none" />
+       {/* SLOT WINDOW */}
+<div className="relative mx-auto max-w-xl rounded-[1.5rem] 
+                bg-gradient-to-b from-[#1f2937] to-black 
+                border-2 border-slate-600/70 
+                shadow-[0_20px_60px_rgba(0,0,0,0.6),inset_0_0_60px_rgba(30,41,59,0.9)] 
+                p-4 md:p-5 mb-2">
 
-          {/* Reels */}
-          <div className="flex items-center justify-center gap-6">
-            <div className="rounded-xl bg-gradient-to-b from-[#0f172a] to-black border border-slate-700/70 shadow-[inset_0_6px_30px_rgba(0,0,0,0.85)] p-3">
-              <Reel strip={strips[0]} position={pos[0]} durationMs={1100} />
-            </div>
-            <div className="rounded-xl bg-gradient-to-b from-[#0f172a] to-black border border-slate-700/70 shadow-[inset_0_6px_30px_rgba(0,0,0,0.85)] p-3">
-              <Reel strip={strips[1]} position={pos[1]} durationMs={1600} />
-            </div>
-            <div className="rounded-xl bg-gradient-to-b from-[#0f172a] to-black border border-slate-700/70 shadow-[inset_0_6px_30px_rgba(0,0,0,0.85)] p-3">
-              <Reel strip={strips[2]} position={pos[2]} durationMs={2100} />
-            </div>
-          </div>
+  {/* bezel inner border */}
+  <div className="absolute inset-1 rounded-[1.35rem] border border-slate-500/50 pointer-events-none" />
 
-          {/* marquee bottom row */}
-          <div className="flex justify-center gap-1 mt-2">
-            {Array.from({ length: 18 }).map((_, i) => (
-              <div
-                key={i}
-                className={`w-2 h-2 rounded-full ${
-                  i % 3 === 0 ? "bg-orange-400" : i % 3 === 1 ? "bg-yellow-400" : "bg-purple-400"
-                } shadow-[0_0_12px_rgba(253,224,71,0.9)]`}
-              />
-            ))}
-          </div>
-        </div>
+  {/* Reels */}
+  <div className="flex items-center justify-center gap-3 sm:gap-4 md:gap-6">
+    <div className="flex-1 min-w-[5rem] sm:min-w-[6rem] md:min-w-[7rem] lg:min-w-[8rem] 
+                    rounded-xl bg-gradient-to-b from-[#0f172a] to-black 
+                    border border-slate-700/70 
+                    shadow-[inset_0_8px_36px_rgba(0,0,0,0.85)] p-4 md:p-5">
+      <Reel strip={strips[0]} position={pos[0]} durationMs={1100} />
+    </div>
+
+    <div className="flex-1 min-w-[5rem] sm:min-w-[6rem] md:min-w-[7rem] lg:min-w-[8rem] 
+                    rounded-xl bg-gradient-to-b from-[#0f172a] to-black 
+                    border border-slate-700/70 
+                    shadow-[inset_0_8px_36px_rgba(0,0,0,0.85)] p-4 md:p-5">
+      <Reel strip={strips[1]} position={pos[1]} durationMs={1600} />
+    </div>
+
+    <div className="flex-1 min-w-[5rem] sm:min-w-[6rem] md:min-w-[7rem] lg:min-w-[8rem] 
+                    rounded-xl bg-gradient-to-b from-[#0f172a] to-black 
+                    border border-slate-700/70 
+                    shadow-[inset_0_8px_36px_rgba(0,0,0,0.85)] p-4 md:p-5">
+      <Reel strip={strips[2]} position={pos[2]} durationMs={2100} />
+    </div>
+  </div>
+
+  {/* marquee bottom row */}
+  <div className="flex justify-center gap-1 mt-3">
+    {Array.from({ length: 18 }).map((_, i) => (
+      <div
+        key={i}
+        className={`w-2 h-2 rounded-full ${
+          i % 3 === 0 ? "bg-orange-400" : i % 3 === 1 ? "bg-yellow-400" : "bg-purple-400"
+        } shadow-[0_0_12px_rgba(253,224,71,0.9)]`}
+      />
+    ))}
+  </div>
+</div>
+
 {/* Controls */}
 <div className="flex w-full flex-col gap-3 sm:gap-4 items-center justify-center">
 

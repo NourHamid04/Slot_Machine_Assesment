@@ -1,36 +1,43 @@
 // src/components/Reel.jsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
-import { Crown } from "lucide-react"; 
-
 export default function Reel({ strip, position, durationMs }) {
   const containerRef = useRef(null);
   const [itemH, setItemH] = useState(0);
 
-  // We want exactly ONE visible item locked in the center
-  const VISIBLE = 1;
+  // Show THREE visible items (center one is the payline)
+  const VISIBLE = 3;
+  const OFFSET_TOP = Math.floor(VISIBLE / 2); // 1 (so center is index +1 from top)
 
-  // Repeat the strip but keep it light; modulo will keep us safe forever
-  const repeatedStrip = useMemo(() => {
-    const reps = 10; // can be small because we modulo the position below
-    return Array.from({ length: reps * strip.length }, (_, i) => strip[i % strip.length]);
-  }, [strip]);
+  // Repeat the strip (lightweight; we land in the middle cycle to avoid edges)
+  const reps = 10;
+  const repeatedStrip = useMemo(
+    () => Array.from({ length: reps * strip.length }, (_, i) => strip[i % strip.length]),
+    [strip]
+  );
+
+  // Middle cycle start (keeps translate well away from edges)
+  const baseIndex = useMemo(
+    () => Math.floor(reps / 2) * strip.length,
+    [strip.length]
+  );
 
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
-    const resize = () => setItemH(el.clientHeight / VISIBLE); // == full height
+    const resize = () => setItemH(el.clientHeight / VISIBLE);
     resize();
     const ro = new ResizeObserver(resize);
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
 
-  // Keep position in-range so we never scroll beyond rendered items
+  // Keep position in-range relative to logical strip
   const wrapped = ((position % strip.length) + strip.length) % strip.length;
 
-  // For 1 visible item, the target item should sit exactly in the window
-  const translateY = itemH ? -(wrapped * itemH) : 0;
+  // For 3 visible items, show (wrapped-1, wrapped, wrapped+1)
+  const translateY = itemH ? -((baseIndex + wrapped - OFFSET_TOP) * itemH) : 0;
+
 return (
   <div className="relative w-full">
     {/* subtle purple/orange stage glow */}
@@ -41,13 +48,13 @@ return (
                  blur-md sm:blur-lg md:blur-xl"
     />
 
-    {/* NEON MACHINE BODY — orange/yellow/purple theme */}
+    {/* NEON MACHINE BODY — bigger to fit 3 rows */}
     <div
       ref={containerRef}
       className="
         relative overflow-hidden rounded-[1.25rem] sm:rounded-[2rem] p-2
-        w-full max-w-36 xs:max-w-44 sm:max-w-52 md:max-w-64 lg:max-w-72 xl:max-w-80
-        aspect-[8/15]
+        w-full max-w-44 xs:max-w-56 sm:max-w-64 md:max-w-80 lg:max-w-96 xl:max-w-[28rem]
+        aspect-[7/15]
         border border-yellow-400/60
         bg-[conic-gradient(from_220deg_at_50%_50%,#facc15_0%,#f97316_25%,#a855f7_50%,#f97316_75%,#facc15_100%)]
         shadow-[0_10px_30px_rgba(0,0,0,0.6),inset_0_2px_0_rgba(255,255,255,0.4),inset_0_-6px_12px_rgba(0,0,0,0.25)]
@@ -89,9 +96,9 @@ return (
               style={{ height: itemH || undefined }}
               className="
                 flex items-center justify-center
-                text-[clamp(3rem,8vw,4.5rem)] md:text-[clamp(3.5rem,6vw,5rem)]
+                text-[clamp(1.25rem,3.5vw,2rem)] md:text-[clamp(1.75rem,2.5vw,2.5rem)]
                 font-extrabold text-white select-none
-                drop-shadow-[0_0_14px_rgba(0,0,0,0.65)]
+                drop-shadow-[0_0_10px_rgba(0,0,0,0.65)]
               "
             >
               <span className="leading-none">{s.glyph}</span>
@@ -99,13 +106,13 @@ return (
           ))}
         </ul>
 
-        {/* vignettes */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-8 sm:h-10
+        {/* vignettes tuned for 3 rows */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-12 sm:h-16
                         bg-gradient-to-b from-black/60 to-transparent" />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-8 sm:h-10
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-12 sm:h-16
                         bg-gradient-to-t from-black/60 to-transparent" />
 
-        {/* neon payline */}
+        {/* neon payline (middle row highlight) */}
         <div
           className="pointer-events-none absolute inset-x-2 sm:inset-x-3
                      top-1/2 -translate-y-1/2
@@ -127,8 +134,5 @@ return (
     </div>
   </div>
 );
-
-
-
 
 }
