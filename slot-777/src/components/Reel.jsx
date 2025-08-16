@@ -33,36 +33,36 @@ export default function Reel({ strip, position, durationMs }) {
   const translateY = itemH ? -(wrapped * itemH) : 0;
 return (
   <div className="relative w-full">
-    {/* subtle blue stage glow (scales with viewport) */}
+    {/* subtle purple/orange stage glow */}
     <div
       className="pointer-events-none absolute -z-10 rounded-[2rem]
                  -inset-3 xs:-inset-4 sm:-inset-6
-                 bg-[radial-gradient(ellipse_at_center,rgba(37,99,235,0.45),transparent_60%)]
+                 bg-[radial-gradient(ellipse_at_center,rgba(168,85,247,0.35),transparent_60%)]
                  blur-md sm:blur-lg md:blur-xl"
     />
 
-    {/* GOLD MACHINE BODY — larger reel */}
+    {/* NEON MACHINE BODY — orange/yellow/purple theme */}
     <div
       ref={containerRef}
       className="
         relative overflow-hidden rounded-[1.25rem] sm:rounded-[2rem] p-2
         w-full max-w-36 xs:max-w-44 sm:max-w-52 md:max-w-64 lg:max-w-72 xl:max-w-80
-        aspect-[8/15]   /* was 9/16 — taller/wider */
-        border border-amber-200/60
-        bg-[conic-gradient(from_220deg_at_50%_50%,#fcd34d_0%,#f59e0b_22%,#b45309_45%,#f59e0b_68%,#fcd34d_100%)]
-        shadow-[0_10px_30px_rgba(0,0,0,0.5),inset_0_2px_0_rgba(255,255,255,0.6),inset_0_-6px_12px_rgba(0,0,0,0.25)]
+        aspect-[8/15]
+        border border-yellow-400/60
+        bg-[conic-gradient(from_220deg_at_50%_50%,#facc15_0%,#f97316_25%,#a855f7_50%,#f97316_75%,#facc15_100%)]
+        shadow-[0_10px_30px_rgba(0,0,0,0.6),inset_0_2px_0_rgba(255,255,255,0.4),inset_0_-6px_12px_rgba(0,0,0,0.25)]
       "
     >
       {/* inner lip */}
       <div
-        className="absolute inset-1 rounded-[1rem] sm:rounded-[1.65rem] border border-amber-100/40
-                   shadow-[inset_0_0_14px_rgba(255,255,255,0.45)] pointer-events-none"
+        className="absolute inset-1 rounded-[1rem] sm:rounded-[1.65rem] border border-yellow-200/40
+                   shadow-[inset_0_0_14px_rgba(255,255,255,0.4)] pointer-events-none"
       />
 
       {/* DRUM WINDOW */}
       <div
         className="relative size-full rounded-[0.9rem] sm:rounded-[1.35rem] overflow-hidden
-                   bg-[linear-gradient(180deg,#0f0f11_0%,#141417_100%)]
+                   bg-[linear-gradient(180deg,#0d0d0f_0%,#1a1a1d_100%)]
                    shadow-[inset_0_10px_20px_rgba(0,0,0,0.55),inset_0_-10px_20px_rgba(0,0,0,0.55)]"
       >
         {/* curved glass sheen */}
@@ -72,7 +72,7 @@ return (
 
         {/* ultra subtle texture lines */}
         <div className="pointer-events-none absolute inset-0 opacity-[0.06]
-                        bg-[repeating-linear-gradient(90deg,transparent_0px,transparent_12px,rgba(255,255,255,0.6)_13px,transparent_14px)]"
+                        bg-[repeating-linear-gradient(90deg,transparent_0px,transparent_12px,rgba(255,255,255,0.5)_13px,transparent_14px)]"
         />
 
         {/* SPINNING LIST */}
@@ -99,19 +99,19 @@ return (
           ))}
         </ul>
 
-        {/* vignettes (single top & bottom) */}
+        {/* vignettes */}
         <div className="pointer-events-none absolute inset-x-0 top-0 h-8 sm:h-10
-                        bg-gradient-to-b from-black/55 to-transparent" />
+                        bg-gradient-to-b from-black/60 to-transparent" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-8 sm:h-10
-                        bg-gradient-to-t from-black/55 to-transparent" />
+                        bg-gradient-to-t from-black/60 to-transparent" />
 
         {/* neon payline */}
         <div
           className="pointer-events-none absolute inset-x-2 sm:inset-x-3
                      top-1/2 -translate-y-1/2
                      h-[3px] sm:h-[4px] rounded-full
-                     bg-[linear-gradient(90deg,#f472b6,#fde047,#22d3ee)]
-                     shadow-[0_0_12px_rgba(253,224,71,0.85)] sm:shadow-[0_0_16px_rgba(253,224,71,0.95)]"
+                     bg-[linear-gradient(90deg,#f97316,#fde047,#a855f7)]
+                     shadow-[0_0_14px_rgba(253,224,71,0.9)] sm:shadow-[0_0_18px_rgba(168,85,247,0.8)]"
         />
       </div>
     </div>
@@ -120,13 +120,14 @@ return (
     <div className="absolute right-0 sm:-right-2 top-1/2 -translate-y-1/2">
       <div
         className="h-16 xs:h-20 sm:h-24 md:h-28 w-[3px] sm:w-[4px] rounded-full
-                   bg-[linear-gradient(180deg,#fde047,#f59e0b,#f97316)]
-                   shadow-[0_0_12px_rgba(245,158,11,0.85)] sm:shadow-[0_0_14px_rgba(245,158,11,0.9)]
-                   opacity-70"
+                   bg-[linear-gradient(180deg,#fde047,#f97316,#a855f7)]
+                   shadow-[0_0_14px_rgba(249,115,22,0.9)]
+                   opacity-80"
       />
     </div>
   </div>
 );
+
 
 
 
