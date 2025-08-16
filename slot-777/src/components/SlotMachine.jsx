@@ -8,6 +8,16 @@ export default function SlotMachine() {
   const [balance, setBalance] = useState(1000);
   const [bet, setBet] = useState(10);
   const [winnings, setWinnings] = useState(0);
+// Quick-bet helpers
+const safeSetBet = (v) =>
+  setBet(() => Math.max(1, Math.min(1000, Math.min(balance, v))))
+
+const halfBet    = () => safeSetBet(Math.max(1, Math.floor(bet / 2)));
+const doubleBet  = () => safeSetBet(bet * 2);
+const minBet     = () => safeSetBet(1);
+const maxBetQuick= () => safeSetBet(balance);
+
+const presetBets = [5, 10, 25, 50, 100, 200, 500];
 
   // Reels
   const [strips, setStrips] = useState(() => [
@@ -223,42 +233,117 @@ return (
             ))}
           </div>
         </div>
+{/* Controls */}
+<div className="flex w-full flex-col gap-3 sm:gap-4 items-center justify-center">
 
-        {/* Controls */}
-        <div className="flex flex-wrap items-center justify-center gap-4">
-          <div className="flex items-center gap-2 bg-black/40 border border-slate-600/60 rounded-2xl p-3 shadow-[0_0_12px_rgba(251,191,36,0.4)]">
-            <button
-              className="px-4 py-2 rounded-xl bg-gradient-to-b from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white font-bold shadow-lg active:scale-95 disabled:opacity-40"
-              disabled={spinning}
-              onClick={() => changeBet(-1)}
-            >
-              −
-            </button>
-            <div className="px-4 text-lg font-semibold text-yellow-200">${bet}</div>
-            <button
-              className="px-4 py-2 rounded-xl bg-gradient-to-b from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 text-white font-bold shadow-lg active:scale-95 disabled:opacity-40"
-              disabled={spinning}
-              onClick={() => changeBet(1)}
-            >
-              +
-            </button>
-            <button
-              className="ml-2 px-4 py-2 rounded-xl bg-gradient-to-b from-yellow-400 to-yellow-500 hover:from-yellow-300 hover:to-yellow-400 text-black font-extrabold shadow-lg active:scale-95 disabled:opacity-40"
-              disabled={spinning || balance <= 0}
-              onClick={maxBet}
-            >
-              Max Bet
-            </button>
-          </div>
+  {/* Row A: Stepper + Live Bet */}
+  <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+    <div className="flex items-center gap-2 bg-black/40 border border-slate-600/60 rounded-2xl p-2.5 sm:p-3 shadow-[0_0_12px_rgba(251,191,36,0.35)]">
+      <button
+        aria-label="Decrease Bet"
+        className="px-3 sm:px-4 py-2 rounded-xl bg-gradient-to-b from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white font-bold shadow-lg active:scale-95 disabled:opacity-40"
+        disabled={spinning}
+        onClick={() => changeBet(-1)}
+      >−</button>
 
-          <button
-            className="px-10 py-4 rounded-2xl bg-gradient-to-r from-orange-500 via-yellow-400 to-purple-400 hover:brightness-110 text-black font-extrabold tracking-widest text-lg shadow-[0_0_25px_rgba(251,191,36,0.7)] active:scale-95 disabled:opacity-40 border border-yellow-400/50"
-            onClick={handleSpin}
-            disabled={!canSpin}
-          >
-            SPIN
-          </button>
-        </div>
+      <div className="px-3 sm:px-4 text-base sm:text-lg font-semibold text-yellow-200 whitespace-nowrap">
+        ${bet}
+      </div>
+
+      <button
+        aria-label="Increase Bet"
+        className="px-3 sm:px-4 py-2 rounded-xl bg-gradient-to-b from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 text-white font-bold shadow-lg active:scale-95 disabled:opacity-40"
+        disabled={spinning}
+        onClick={() => changeBet(1)}
+      >+</button>
+
+      {/* bumpers */}
+      <button
+        aria-label="Increase Bet by 10"
+        className="px-3 py-2 rounded-xl bg-gradient-to-b from-slate-700 to-slate-600 hover:from-slate-600 hover:to-slate-500 text-white font-semibold shadow-md active:scale-95 disabled:opacity-40"
+        disabled={spinning}
+        onClick={() => changeBet(10)}
+      >+10</button>
+      <button
+        aria-label="Increase Bet by 50"
+        className="px-3 py-2 rounded-xl bg-gradient-to-b from-slate-700 to-slate-600 hover:from-slate-600 hover:to-slate-500 text-white font-semibold shadow-md active:scale-95 disabled:opacity-40"
+        disabled={spinning}
+        onClick={() => changeBet(50)}
+      >+50</button>
+    </div>
+
+    {/* Spin (kept prominent) */}
+    <button
+      className="px-8 sm:px-10 py-3 sm:py-4 rounded-2xl bg-gradient-to-r from-orange-500 via-yellow-400 to-purple-400 hover:brightness-110 text-black font-extrabold tracking-widest text-base sm:text-lg shadow-[0_0_25px_rgba(251,191,36,0.7)] active:scale-95 disabled:opacity-40 border border-yellow-400/50"
+      onClick={handleSpin}
+      disabled={!canSpin}
+    >
+      SPIN
+    </button>
+  </div>
+
+  {/* Row B: Quick “chip” presets (scrollable on small screens) */}
+  <div className="w-full max-w-4xl flex items-center justify-center">
+    <div className="flex gap-2 sm:gap-3 overflow-x-auto no-scrollbar py-1 px-1">
+      {presetBets.map((v) => (
+        <button
+          key={v}
+          aria-label={`Set bet to ${v}`}
+          className={[
+            "px-4 py-2 rounded-xl border font-semibold shadow-md active:scale-95 whitespace-nowrap",
+            "bg-gradient-to-b from-[#1f2937] to-black text-yellow-200",
+            "border-yellow-400/40 hover:border-yellow-300/70",
+            bet === v ? "ring-2 ring-yellow-400/70" : ""
+          ].join(" ")}
+          disabled={spinning}
+          onClick={() => safeSetBet(v)}
+        >
+          ${v}
+        </button>
+      ))}
+    </div>
+  </div>
+
+  {/* Row C: Smart Actions */}
+  <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+    <button
+      aria-label="Minimum Bet"
+      className="px-4 py-2 rounded-xl bg-gradient-to-b from-slate-800 to-slate-700 hover:from-slate-700 hover:to-slate-600 text-white font-semibold shadow-md active:scale-95 disabled:opacity-40"
+      disabled={spinning}
+      onClick={minBet}
+    >
+      Min
+    </button>
+    <button
+      aria-label="Half Bet"
+      className="px-4 py-2 rounded-xl bg-gradient-to-b from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 text-white font-semibold shadow-md active:scale-95 disabled:opacity-40"
+      disabled={spinning || bet <= 1}
+      onClick={halfBet}
+    >
+      ½
+    </button>
+    <button
+      aria-label="Double Bet"
+      className="px-4 py-2 rounded-xl bg-gradient-to-b from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white font-semibold shadow-md active:scale-95 disabled:opacity-40"
+      disabled={spinning}
+      onClick={doubleBet}
+    >
+      ×2
+    </button>
+    <button
+      aria-label="Max Bet (to balance)"
+      className="px-4 py-2 rounded-xl bg-gradient-to-b from-yellow-400 to-yellow-500 hover:from-yellow-300 hover:to-yellow-400 text-black font-extrabold shadow-md active:scale-95 disabled:opacity-40"
+      disabled={spinning || balance <= 0}
+      onClick={maxBetQuick}
+    >
+      Max
+    </button>
+    {/* Keep your existing "Max Bet" if you want both behaviors:
+        - Max = set bet to balance
+        - Max Bet = your existing function (maybe has extra logic) */}
+    {/* <button ... onClick={maxBet}>Max Bet</button> */}
+  </div>
+</div>
 
         {/* Message */}
         <div className="mt-5 text-center text-sm text-purple-200 tracking-wide">{message}</div>
